@@ -134,3 +134,7 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 LANGUAGE_CODE = "ru-RU"
 TIME_ZONE = "Asia/Almaty"
 
+# Media URL
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
