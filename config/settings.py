@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     # My apps
     "accounts.apps.AccountsConfig",
     "enterprises.apps.EnterprisesConfig",
+    # 3rd party
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
@@ -127,4 +129,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom User Model
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+# Language and Time
+LANGUAGE_CODE = "ru-RU"
+TIME_ZONE = "Asia/Almaty"
 
