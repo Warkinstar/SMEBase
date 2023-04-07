@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # My apps
     "accounts.apps.AccountsConfig",
     "enterprises.apps.EnterprisesConfig",
+    "pages.apps.PagesConfig",
     # 3rd party
     "phonenumber_field",
     "allauth",
@@ -63,7 +64,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
