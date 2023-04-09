@@ -157,13 +157,14 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
-
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_USERNAME_REQUIRED = False
-
 ACCOUNT_EMAIL_REQUIRED = True
-
 ACCOUNT_SESSION_REMEMBER = True
+
+ACCOUNT_FORMS = {
+    "signup": "accounts.forms.CustomSignupForm",
+}
 
 # crispy forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
