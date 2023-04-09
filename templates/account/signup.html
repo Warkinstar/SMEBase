@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Регистрация{% endblock title %}
+
+{% block content %}
+
+<h1>Регистрация</h1>
+
+<p>Уже есть аккаунт? Перейдите по ссылке чтобы <a href="{% url 'account_login' %}">войти</a>.</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+</form>
+
+{% endblock content %}
