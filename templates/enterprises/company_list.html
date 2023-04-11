@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Список компаний малого и среднего бизнеса{% endblock title %}
+
+{% block content %}
+  <h2>Список компаний малого и среднего бизнеса:</h2>
+  {% for company in company_list %}
+    <p>{{ company }}</p>
+  {% empty %}
+    <p>Список пока пуст</p>
+  {% endfor %}
+{% endblock content %}

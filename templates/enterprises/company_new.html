@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Добавление бизнес объекта
+{% endblock title %}
+
+{% block content %}
+  <h2>Форма:</h2>
+  <p>Заполните форму в соответствии с информацией добавляемого бизнес объекта:</p>
+  <form method="post" enctype="multipart/form-data">
+    {{ form|crispy }}
+    {% csrf_token %}
+    <button class="btn btn-success" type="submit">Сохранить</button>
+  </form>
+{% endblock content %}
+

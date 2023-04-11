@@ -1,7 +1,17 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Единая база данных малого и среднего бизнеса Байзаксого района{% endblock title %}
 
 {% block content %}
-    <div>Единая база данных малого и среднего бизнеса Байзаксого района</div>
+
+<div class="row">
+    <a href="{% url 'company_list' %}" class="col-md-6 card hover">
+        <div class="card-body">Список организаций</div>
+    </a>
+    <a href="{% url 'company_new' %}" class="col-md-6 card">
+        <div class="card-body">Добавить организацию</div>
+    </a>
+</div>
+
 {% endblock content %}
