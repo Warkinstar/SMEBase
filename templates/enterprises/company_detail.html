@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ company }}
+{% endblock title %}
+
+{% block content %}
+
+
+
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-header">
+            <h5 class="card-title">{{ company.name }}</h5>
+          </div>
+          <div class="card-body">
+            {% if company.image %}
+              <img src="{{ company.image.url }}" class="rounded float-end" alt="{{ company.name }} image" width="200" height="200">
+            {% endif %}
+              <p class="card-text">{{ company.description }}</p>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Информация о компании</h5>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>БИН / ИИН:</strong> {{ company.tax_id }}</li>
+            <li class="list-group-item"><strong>Форма собственности:</strong> {{ company.ownership_type }}</li>
+            <li class="list-group-item"><strong>Тип бизнеса:</strong> {{ company.business_type }}</li>
+            <li class="list-group-item"><strong>Адрес:</strong> {{ company.address }}</li>
+            <li class="list-group-item"><strong>Телефон:</strong> {{ company.phone_number }}</li>
+            <li class="list-group-item"><strong>Email:</strong> {{ company.email }}</li>
+            {% if company.website %}
+              <li class="list-group-item"><strong>Веб-сайт:</strong> <a href="{{ company.website }}" target="_blank">{{ company.website }}</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}

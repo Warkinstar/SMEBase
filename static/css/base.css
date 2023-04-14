@@ -13,9 +13,3 @@ footer {
 .navbar {
     margin-bottom: 20px;
 }
-
-
-.card:hover {
-    background-color: #f2f2f2;
-    cursor: pointer;
-}

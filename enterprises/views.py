@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Company
 from .forms import CompanyForm
@@ -19,5 +19,11 @@ class CompanyListView(ListView):
     model = Company
     template_name = "enterprises/company_list.html"
     context_object_name = "company_list"
+
+
+class CompanyDetailView(DetailView):
+    model = Company
+    template_name = "enterprises/company_detail.html"
+    context_object_name = "company"
 
 
