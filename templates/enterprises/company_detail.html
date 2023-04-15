@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block include_js %}
+  <script src="{% static 'js/employee_delete.js' %}" defer></script>
+{% endblock %}
+
 {% block title %}
     {{ company }}
 {% endblock title %}
@@ -37,6 +41,27 @@
         </div>
 
         {# EMPLOYEES #}
+
+        {# MODAL DELETE #}
+        <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Удаление сотрудника</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="modal-body-confirm"></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="cancel-button">Нет</button>
+                <form>
+                  {% csrf_token %}
+                  <button type="button" id="delete-button" class="btn btn-danger">Да, удалить</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {% with employees=company.employees.all %}
         <div class="alert alert-success" role="alert">
           {% if employees %} <h4>Сотрудники: </h4> {% endif %}
@@ -44,25 +69,36 @@
 
         <ul class="list-group">
         {% for employee in employees %}
-          <li class="list-group-item">
+          <li class="list-group-item" id="{{ employee.pk }}">
             <div class="row">
               <div class="col-md-3">
                 <img {% if employee.image %} src="{{ employee.image.url }}" {% else %} src="{% static 'images/no-avatar.jfif' %}" {% endif %} class="mr-3 rounded-circle img-fluid" alt="{{ employee.first_name }} {{ employee.last_name }} Avatar">
               </div>
               <div class="col-md-9">
                 <div class="d-flex justify-content-between align-items-center">
-                  <h5 class="mt-0 mb-1">{{ employee.last_name }} {{ employee.first_name }}{% if employee.middle_name %} {{ employee.middle_name }} {% endif %}</h5>
+                  <h5 class="mt-0 mb-1">{{ employee }}</h5>
+
                   {% if request.user == company.user %}
                   <div>
+                    {# EDIT EMPLOYEE #}
                     <a href="{% url 'employee_update' company.slug employee.pk %}" class="btn btn-sm btn-primary">
                       <i class="bi bi-pencil"></i>
                     </a>
-                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal{{ employee.pk }}">
+                    {# DELETE EMPLOYEE #}
+                    <button class="btn btn-sm btn-danger modal-button"
+                            type="button"
+                            data-company-slug="{{ company.slug }}"
+                            data-employee-pk="{{ employee.pk }}"
+                            data-company-name="{{ company }}"
+                            data-employee-full-name="{{ employee }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteEmployeeModal">
                       <i class="bi bi-trash"></i>
                     </button>
                   </div>
                   {% endif %}
                 </div>
+
                 <p class="mb-1"><strong>Должность: </strong>{{ employee.position }}</p>
                 <p class="mb-1"><strong>Электронный адрес: </strong>{{ employee.email }}</p>
                 <p class="mb-1"><strong>Номер телефона: </strong>{{ employee.phone_number }}</p>

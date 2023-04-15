@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Company, Employee
 from .forms import CompanyForm, EmployeeForm
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):
@@ -85,3 +87,13 @@ class EmployeeUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("company_detail", args=[self.object.company.slug])
+
+@login_required()
+def employee_delete(request, slug, pk):
+    # if request.is_ajax(): # Этот метод устарел
+    if request.headers.get("x-requested-with") == "XMLHttpRequest":
+        company = get_object_or_404(Company, slug=slug, user=request.user)
+        employee = get_object_or_404(Employee, pk=pk, company=company)
+        # employee = Employee.objects.get(pk=pk)
+        employee.delete()
+        return JsonResponse({"status": "success"})

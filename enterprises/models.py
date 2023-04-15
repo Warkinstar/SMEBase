@@ -164,4 +164,5 @@ class Employee(BaseModel):
     )
 
     def __str__(self):
-        return f"{self.last_name} {self.first_name} ({self.position})"
+        middle_name = f" {self.middle_name}" if self.middle_name else ""
+        return f"{self.last_name} {self.first_name}" + middle_name
