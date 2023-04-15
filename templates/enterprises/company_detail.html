@@ -50,7 +50,19 @@
                 <img {% if employee.image %} src="{{ employee.image.url }}" {% else %} src="{% static 'images/no-avatar.jfif' %}" {% endif %} class="mr-3 rounded-circle img-fluid" alt="{{ employee.first_name }} {{ employee.last_name }} Avatar">
               </div>
               <div class="col-md-9">
-                <h5 class="mt-0 mb-1">{{ employee.last_name }} {{ employee.first_name }}{% if employee.middle_name %} {{ employee.middle_name }} {% endif %}</h5>
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5 class="mt-0 mb-1">{{ employee.last_name }} {{ employee.first_name }}{% if employee.middle_name %} {{ employee.middle_name }} {% endif %}</h5>
+                  {% if request.user == company.user %}
+                  <div>
+                    <a href="{% url 'employee_update' company.slug employee.pk %}" class="btn btn-sm btn-primary">
+                      <i class="bi bi-pencil"></i>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmployeeModal{{ employee.pk }}">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                  {% endif %}
+                </div>
                 <p class="mb-1"><strong>Должность: </strong>{{ employee.position }}</p>
                 <p class="mb-1"><strong>Электронный адрес: </strong>{{ employee.email }}</p>
                 <p class="mb-1"><strong>Номер телефона: </strong>{{ employee.phone_number }}</p>
@@ -59,6 +71,7 @@
               </div>
             </div>
           </li>
+
         {% endfor %}
         </ul>
         {% endwith %}

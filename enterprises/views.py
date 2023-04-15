@@ -71,3 +71,17 @@ class EmployeeCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy("company_detail", args=[self.company.slug])
+
+
+class EmployeeUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = EmployeeForm
+    pk_url_kwarg = "pk"
+    context_object_name = "employee"
+    template_name = "enterprises/employee_update.html"
+
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(Employee, pk=self.kwargs["pk"], company__user=self.request.user)
+        return obj
+
+    def get_success_url(self):
+        return reverse_lazy("company_detail", args=[self.object.company.slug])

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+
+    Редактирование работника "{{ employee.last_name }} {{ employee.first_name }}" субъекта"{{ employee.company }}"
+
+{% endblock title %}
+
+{% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Список компаний</a></li>
+          <li class="breadcrumb-item" aria-current="page"><a href="{% url 'company_detail' employee.company.slug %}">{{ employee.company }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Добавление нового работника</li>
+        </ol>
+  </nav>
+
+    <h3>Редактирование профиля работника "{{ employee.last_name }} {{ employee.first_name }}" для субъекта "{{ employee.company }}"</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">Сохранить</button>
+    </form>
+
+{% endblock content %}
