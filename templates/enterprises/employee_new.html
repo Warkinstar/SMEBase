@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+
+    Добавление работника для субъекта"{{ company }}"
+
+{% endblock title %}
+
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Список компаний</a></li>
+          <li class="breadcrumb-item" aria-current="page"><a href="{% url 'company_detail' company.slug %}">{{ company }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Добавление нового работника</li>
+        </ol>
+  </nav>
+
+    <h3>Добавление работника для субъекта "{{ company }}"</h3>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Добавить работника" class="btn btn-success">
+    </form>
+{% endblock content %}

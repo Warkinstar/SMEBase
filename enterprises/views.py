@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Company
-from .forms import CompanyForm
+from .models import Company, Employee
+from .forms import CompanyForm, EmployeeForm
 from django.urls import reverse_lazy
 
 
@@ -43,3 +43,24 @@ class CompanyUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("company_detail", kwargs={"slug": self.object.slug})
+
+
+class EmployeeCreateView(LoginRequiredMixin, CreateView):
+    template_name = "enterprises/employee_new.html"
+    form_class = EmployeeForm
+
+    def dispatch(self, request, *args, **kwargs):
+        self.company = get_object_or_404(Company, slug=self.kwargs["slug"], user=request.user)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company"] = self.company
+        return context
+
+    def form_valid(self, form):
+        form.instance.company = self.company
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("company_detail", args=[self.company.slug])
