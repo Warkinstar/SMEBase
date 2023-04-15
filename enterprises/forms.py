@@ -16,3 +16,4 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         exclude = ["company"]
+        widgets = {"date_of_birth": forms.SelectDateWidget(years=list(range(1900, 2023)))}

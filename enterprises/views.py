@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Company, Employee
@@ -46,11 +46,15 @@ class CompanyUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class EmployeeCreateView(LoginRequiredMixin, CreateView):
+    """Add company employee"""
+
     template_name = "enterprises/employee_new.html"
     form_class = EmployeeForm
 
     def dispatch(self, request, *args, **kwargs):
-        self.company = get_object_or_404(Company, slug=self.kwargs["slug"], user=request.user)
+        self.company = get_object_or_404(
+            Company, slug=self.kwargs["slug"], user=request.user
+        )
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -60,6 +64,9 @@ class EmployeeCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.company = self.company
+        if "save_and_add_another" in self.request.POST:
+            form.save()
+            return redirect(reverse_lazy("employee_new", args=[self.company.slug]))
         return super().form_valid(form)
 
     def get_success_url(self):

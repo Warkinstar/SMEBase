@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
     {{ company }}
@@ -6,6 +7,7 @@
 
 {% block content %}
 
+  {# NAVIGATION #}
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Список компаний</a></li>
@@ -13,21 +15,57 @@
     </ol>
   </nav>
 
+
   <div class="container mt-5">
     <div class="row">
+
+      {# COMPANY DESCRIPTION #}
       <div class="col-md-8">
+        <div class="alert alert-primary" role="alert">
+          <h2>{{ company }}</h2>
+        </div>
         <div class="card mb-3">
-          <div class="card-header">
-            <h5 class="card-title">{{ company.name }}</h5>
-          </div>
+<!--          <div class="card-header">-->
+<!--            <h5 class="card-title">{{ company.name }}</h5>-->
+<!--          </div>-->
           <div class="card-body">
             {% if company.image %}
-              <img src="{{ company.image.url }}" class="rounded float-end" alt="{{ company.name }} image" width="200" height="200">
+              <img src="{{ company.image.url }}" class="rounded float-start img-fluid img-thumbnail me-3" alt="{{ company.name }} image" width="200" height="200">
             {% endif %}
               <p class="card-text">{{ company.description }}</p>
             </div>
         </div>
+
+        {# EMPLOYEES #}
+        {% with employees=company.employees.all %}
+        <div class="alert alert-success" role="alert">
+          {% if employees %} <h4>Сотрудники: </h4> {% endif %}
+        </div>
+
+        <ul class="list-group">
+        {% for employee in employees %}
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-3">
+                <img {% if employee.image %} src="{{ employee.image.url }}" {% else %} src="{% static 'images/no-avatar.jfif' %}" {% endif %} class="mr-3 rounded-circle img-fluid" alt="{{ employee.first_name }} {{ employee.last_name }} Avatar">
+              </div>
+              <div class="col-md-9">
+                <h5 class="mt-0 mb-1">{{ employee.last_name }} {{ employee.first_name }}{% if employee.middle_name %} {{ employee.middle_name }} {% endif %}</h5>
+                <p class="mb-1"><strong>Должность: </strong>{{ employee.position }}</p>
+                <p class="mb-1"><strong>Электронный адрес: </strong>{{ employee.email }}</p>
+                <p class="mb-1"><strong>Номер телефона: </strong>{{ employee.phone_number }}</p>
+                <p class="mb-1"><strong>Дата рождения: </strong>{{ employee.date_of_birth|default_if_none:"-" }}</p>
+                <p class="mb-0"><strong>Пол: </strong>{{ employee.get_gender_display|default:"-" }}</p>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+        </ul>
+        {% endwith %}
+
       </div>
+
+      {# SIDEBAR INFO #}
       <div class="col-md-4">
         <div class="sticky-md-top">
           <div class="card">

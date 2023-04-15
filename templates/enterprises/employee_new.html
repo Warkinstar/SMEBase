@@ -21,6 +21,7 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="submit" value="Добавить работника" class="btn btn-success">
+        <button type="submit" name="save_and_add_another" class="btn btn-primary">Сохранить и добавить еще</button>
+        <button type="submit" class="btn btn-success">Сохранить</button>
     </form>
 {% endblock content %}
