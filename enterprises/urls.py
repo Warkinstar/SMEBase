@@ -12,4 +12,6 @@ urlpatterns = [
     path("<slug>/employees/new/", views.EmployeeCreateView.as_view(), name="employee_new"),
     path("<slug>/employees/<pk>/update/", views.EmployeeUpdateView.as_view(), name="employee_update"),
     path("<slug>/employees/<pk>/delete/", views.employee_delete, name="employee_delete"),
+
+    path("company/search/", views.CompanySearchView.as_view(), name="company_search"),
 ]

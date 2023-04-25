@@ -1,21 +1,11 @@
 {% extends "base.html" %}
 {% load static %}
-{% load crispy_forms_tags %}
 
-{% block title %}Список компаний малого и среднего бизнеса{% endblock title %}
+{% block title %}Поиск{% endblock title %}
 
 {% block content %}
-<div class="container">
-  <h1 class="text-center">Список компаний</h1>
-
-  <h3>Фильтр:</h3>
-  <form type="get" class="my-3">
-    {{ company_filter_form|crispy }}
-    <input type="submit" class="btn btn-success btn-sm" value="Фильтровать">
-  </form>
-
-  <div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for company in company_list %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for company in company_search_results %}
     <div class="col">
       <div class="card h-100">
           <a href="{% url 'company_detail' company.slug %}">
@@ -35,5 +25,10 @@
       <div class="card bg bg-warning opacity-75">Ничего не найдено</div>
     {% endfor %}
   </div>
+
 </div>
+
+
+
 {% endblock content %}
+
