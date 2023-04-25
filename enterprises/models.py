@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.validators import RegexValidator
 from unidecode import unidecode
+from django.utils import timezone
 
 
 # Регулярно выражение для валидатора поля tax_id
@@ -113,7 +114,7 @@ class Company(BaseModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("company_detail", kwargs={"pk": self.pk})
+        return reverse("company_detail", kwargs={"slug": self.slug})
 
     def save(self, *args, **kwargs):
         # Если slug не установлен (первое создание объекта)
@@ -166,3 +167,83 @@ class Employee(BaseModel):
     def __str__(self):
         middle_name = f" {self.middle_name}" if self.middle_name else ""
         return f"{self.last_name} {self.first_name}" + middle_name
+
+
+YEARS = [(year, year) for year in range(2000, timezone.now().year)]
+
+
+class Financials(BaseModel):
+    """Neutral and universal model for financial information about a company"""
+
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    year = models.IntegerField(
+        verbose_name="Отчет за год",
+        choices=YEARS,
+        help_text="За какой год информация ниже актуальна",
+    )
+
+    revenue = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Общая выручка",
+        help_text="Показывает общую сумму денег, которую компания заработала за определенный год",
+    )
+
+    expenses = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Расходы",
+        help_text="Поле может включать все расходы, связанные с бизнесом, такие как зарплата сотрудников, аренда помещения, закупка оборудования и т.д.",
+    )
+
+    gross_profit = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Валовая прибыль",
+        help_text="Это поле показывает разницу между выручкой и себестоимостью товаров или услуг.",
+    )
+
+    net_income = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Чистая прибыль",
+        help_text="Это поле может показывать сумму денег, которую компания заработала после вычета всех расходов.",
+    )
+
+    taxes = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Налоги",
+        help_text="Это поле может включать информацию о том, сколько налогов компания заплатила за определенный период времени.",
+    )
+
+    dividends = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Дивиденды",
+        help_text="Это поле может показывать сумму денег, которую компания выплатила своим акционерам",
+    )
+
+    margin = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Маржа",
+        help_text="Это поле показывает процентную прибыль компании, которая остается после вычета всех расходов от общей выручки.",
+    )
+
+    def __str__(self):
+        return f'Финансовый показатели субъекта "{self.company.name}"'

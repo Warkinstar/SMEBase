@@ -1,4 +1,4 @@
-from .models import Company, Employee, OwnershipType, BusinessType
+from .models import Company, Employee, OwnershipType, BusinessType, Financials
 from django import forms
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
@@ -27,3 +27,9 @@ class EmployeeForm(forms.ModelForm):
 class CompanyFilterForm(forms.Form):
     ownership_type = forms.ModelChoiceField(OwnershipType.objects.all(), required=False, label="Тип собственности")
     business_type = forms.ModelChoiceField(BusinessType.objects.all(), required=False, label="Тип бизнеса")
+
+
+class FinancialsForm(forms.ModelForm):
+    class Meta:
+        model = Financials
+        exclude = ["company"]

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+
+    Добавление финансовой информации о субъекте "{{ company }}"
+
+{% endblock title %}
+
+
+{% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Список компаний</a></li>
+          <li class="breadcrumb-item" aria-current="page"><a href="{% url 'company_detail' company.slug %}">{{ company }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Добавление финансовой информации</li>
+        </ol>
+    </nav>
+
+    <div class="card my-3">
+      <div class="card-body">
+        <h2 class="card-title">Заполнения финансовой информации за определенный год субъекта "{{ company }}"</h2>
+        <p class="card-text">Все значения производятся в тенге. Все поля кроме поля "Отчет за год", не являются обязательными.</p>
+      </div>
+    </div>
+
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-success" type="submit">Добавить</button>
+    </form>
+
+{% endblock content %}

@@ -40,6 +40,9 @@
             </div>
         </div>
 
+        {# FINANCIALS #}
+
+
         {# EMPLOYEES #}
 
         {# MODAL DELETE #}
@@ -145,7 +148,7 @@
               <a href="{% url 'employee_new' company.slug %}" class="btn btn-sm bg-info" >
                 <i class="bi bi-person-fill-add"></i> Работники
               </a>
-              <a href="{% url 'company_update' company.slug %}" class="btn btn-success btn-sm">
+              <a href="{% url 'financials_new' company.slug %}" class="btn btn-success btn-sm">
                 <i class="bi bi-currency-exchange"></i> Финансы
               </a>
             </div>

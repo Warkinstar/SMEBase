@@ -12,3 +12,4 @@ class CompanyAdmin(admin.ModelAdmin):
 admin.site.register(BusinessType)
 admin.site.register(OwnershipType)
 admin.site.register(Employee)
+admin.site.register(Financials)
