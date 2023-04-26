@@ -14,6 +14,8 @@ urlpatterns = [
     path("<slug>/employees/<pk>/delete/", views.employee_delete, name="employee_delete"),
 
     path("<slug>/financials/new/", views.FinancialsCreateView.as_view(), name="financials_new"),
+    path("<slug>/financials/<pk>/update/", views.FinancialsUpdateView.as_view(), name="financials_update"),
+    path("<slug>/financials/<pk>/delete/", views.FinancialsDeleteView.as_view(), name="financials_delete"),
 
     path("company/search/", views.CompanySearchView.as_view(), name="company_search"),
 ]

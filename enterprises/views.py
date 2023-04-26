@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import CreateView, ListView, DetailView, UpdateView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 from django.views.generic.base import View, TemplateResponseMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Company, Employee, Financials
@@ -9,6 +9,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.mixins import UserPassesTestMixin
+
+
+class CompanyOwnerTestMixin(UserPassesTestMixin):
+    def test_func(self):
+        self.company = get_object_or_404(Company, slug=self.kwargs["slug"])
+        return self.company.user == self.request.user
 
 
 class CompanyCreateView(LoginRequiredMixin, CreateView):
@@ -57,7 +63,7 @@ class CompanyDetailView(DetailView):
     context_object_name = "company"
 
 
-class CompanyUpdateView(LoginRequiredMixin, UpdateView):
+class CompanyUpdateView(LoginRequiredMixin, CompanyOwnerTestMixin, UpdateView):
     template_name = "enterprises/company_update.html"
     form_class = CompanyForm
 
@@ -72,14 +78,11 @@ class CompanyUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class EmployeeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class EmployeeCreateView(LoginRequiredMixin, CompanyOwnerTestMixin, CreateView):
     """Add company employee"""
 
     template_name = "enterprises/employee_new.html"
     form_class = EmployeeForm
-
-    def test_func(self):
-        self.company = get_object_or_404(Company, slug=self.kwargs["slug"])
-        return self.company.user == self.request.user
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -97,7 +100,7 @@ class EmployeeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return reverse_lazy("company_detail", args=[self.company.slug])
 
 
-class EmployeeUpdateView(LoginRequiredMixin, UpdateView):
+class EmployeeUpdateView(LoginRequiredMixin, CompanyOwnerTestMixin, UpdateView):
     form_class = EmployeeForm
     pk_url_kwarg = "pk"
     context_object_name = "employee"
@@ -124,14 +127,10 @@ def employee_delete(request, slug, pk):
         return JsonResponse({"status": "success"})
 
 
-class FinancialsCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class FinancialsCreateView(LoginRequiredMixin, CompanyOwnerTestMixin, CreateView):
     model = Financials
     form_class = FinancialsForm
     template_name = "enterprises/financials_new.html"
-
-    def test_func(self):
-        self.company = get_object_or_404(Company, slug=self.kwargs["slug"])
-        return self.company.user == self.request.user
 
     def form_valid(self, form):
         form.instance.company = self.company
@@ -145,6 +144,33 @@ class FinancialsCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def get_success_url(self):
         return self.company.get_absolute_url()
 
+
+class FinancialsUpdateView(LoginRequiredMixin, CompanyOwnerTestMixin, UpdateView):
+    model = Financials
+    form_class = FinancialsForm
+    pk_url_kwarg = "pk"
+    template_name = "enterprises/financials_update.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company"] = self.company
+        return context
+
+    def get_success_url(self):
+        return self.company.get_absolute_url()
+
+class FinancialsDeleteView(LoginRequiredMixin, CompanyOwnerTestMixin, DeleteView):
+    model = Financials
+    pk_url_kwarg = "pk"
+    template_name = "enterprises/financials_delete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company"] = self.company
+        return context
+
+    def get_success_url(self):
+        return self.company.get_absolute_url()
 
 class CompanySearchView(ListView):
     model = Company

@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block include_js %}
-  <script src="{% static 'js/employee_delete.js' %}" defer></script>
-{% endblock %}
 
 {% block title %}
     {{ company }}
@@ -41,8 +38,87 @@
         </div>
 
         {# FINANCIALS #}
+        {% with financials=company.financials_set.all %}
 
+          <div class="alert alert-info" role="alert">
+            {% if financials %} <h4>Финансовые показатели: </h4> {% endif %}
+          </div>
 
+          {% for finance in financials %}
+            <div class="card my-3">
+              <div class="card-body">
+                <h5 class="card-title">Отчет за год: {{ finance.year }}
+                  {% if company.user == request.user %}
+                    <div class="card-title position-absolute top-0 end-0 px-2 my-2">
+                      <a class="btn btn-sm btn-primary" href="{% url 'financials_update' company.slug finance.pk %}"><i class="bi bi-pencil"></i></a>
+                      <a class="btn btn-sm btn-danger" href="{% url 'financials_delete' company.slug finance.pk %}"><i class="bi bi-trash"></i></a>
+                    </div>
+                  {% endif %}
+                </h5>
+
+                <div class="row">
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Общая выручка</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="revenue-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Показывает общую сумму денег, которую компания заработала за определенный год"><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.revenue|default:'-' }}" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Расходы</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="expenses-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Все расходы, связанные с бизнесом, такие как зарплата сотрудников, аренда помещения, закупка оборудования и т.д."><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.expenses|default:'-' }}" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Валовая прибыль</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="gross-profit-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Показывает разницу между выручкой и себестоимостью товаров или услуг."><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.gross_profit|default:'-' }}" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Чистая прибыль</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="net-income-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Показывает сумму денег, которую компания заработала после вычета всех расходов."><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.net_income|default:'-' }}" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Налоги</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="net-income-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Сколько налогов компания заплатила за определенный период времени."><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.taxes|default:'-' }}" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Дивиденды</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="net-income-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Показывает сумму денег, которую компания выплатила своим акционерам"><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.dividends|default:'-' }}" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Маржа</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="net-income-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Показывает процентную прибыль компании, которая остается после вычета всех расходов от общей выручки."><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.margin|default:'-' }}" readonly>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <p class="mb-1"><strong>Дата</strong></p>
+                    <div class="input-group">
+                      <span class="input-group-text" id="net-income-info" data-bs-toggle="tooltip" data-bs-placement="top" title="Дата прикрепления отчета"><i class="bi bi-patch-question"></i></span>
+                      <input type="text" class="form-control" value="{{ finance.created }}" readonly>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% endwith %}
         {# EMPLOYEES #}
 
         {# MODAL DELETE #}
@@ -160,3 +236,8 @@
   </div>
 
 {% endblock content %}
+
+{% block include_js %}
+  <script src="{% static 'js/employee_delete.js' %}" defer></script>
+  <script src="{% static 'js/finance_manage.js' %}" defer></script>
+{% endblock include_js %}

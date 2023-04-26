@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+
+    Удаление финансовой информации о субъекте "{{ company }}"
+
+{% endblock title %}
+
+
+{% block content %}
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Список компаний</a></li>
+          <li class="breadcrumb-item" aria-current="page"><a href="{% url 'company_detail' company.slug %}">{{ company }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Удаление финансовой информации</li>
+        </ol>
+    </nav>
+
+    <div class="card my-3">
+      <div class="card-body">
+        <h2 class="card-title">Удаление финансовой информации субъекта "{{ company }}"</h2>
+        <p class="card-text">Данный финансовый отчет был создан <b>{{ object.created }}</b>.</p>
+      </div>
+    </div>
+
+
+    <form method="post">
+        {% csrf_token %}
+        <h4 class="alert alert-danger" role="alert">Вы уверены, что хотите удалить данный финансовый отчет?</h4>
+        {{ form|crispy }}
+        <button class="btn btn-danger" type="submit">Удалить</button>
+    </form>
+
+{% endblock content %}
