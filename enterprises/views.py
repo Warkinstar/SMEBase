@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db.models import Q
 from django.contrib.auth.mixins import UserPassesTestMixin
+from .filters import CompanyFilter
 
 
 class CompanyOwnerTestMixin(UserPassesTestMixin):
@@ -34,26 +35,31 @@ class CompanyListView(TemplateResponseMixin, View):
     model = Company
     template_name = "enterprises/company_list.html"
 
-    def company_list_filter(self, request, qs):
-        """Если фильтр есть, то выполнить фильтрацию"""
-        business_type = request.GET.get("business_type")
-        ownership_type = request.GET.get("ownership_type")
-        if business_type and ownership_type:
-            return qs.filter(business_type=business_type, ownership_type=ownership_type)
-        if business_type:
-            return qs.filter(business_type=business_type)
-        if ownership_type:
-            return qs.filter(ownership_type=ownership_type)
-
-        else:
-            return qs
+    # def company_list_filter(self, request, qs):
+    #     """Если фильтр есть, то выполнить фильтрацию"""
+    #     business_type = request.GET.get("business_type")
+    #     ownership_type = request.GET.get("ownership_type")
+    #     if business_type and ownership_type:
+    #         return qs.filter(business_type=business_type, ownership_type=ownership_type)
+    #     if business_type:
+    #         return qs.filter(business_type=business_type)
+    #     if ownership_type:
+    #         return qs.filter(ownership_type=ownership_type)
+    #
+    #     else:
+    #         return qs
 
     def get(self, request):
-        qs = Company.objects.all()
-        company_filter_form = CompanyFilterForm(data=request.GET)
-        company_list = self.company_list_filter(request, qs)
+        # qs = Company.objects.all()
+        # company_filter_form = CompanyFilterForm(data=request.GET)
+        # company_list = self.company_list_filter(request, qs)
+
+        # one string of django-filter, but many without
+        f = CompanyFilter(request.GET, queryset=Company.objects.all())
+
+
         return self.render_to_response(
-            {"company_list": company_list, "company_filter_form": company_filter_form}
+            {"company_list": "company_list", "company_filter_form": "company_filter_form", "filter": f}
         )
 
 

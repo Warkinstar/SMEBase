@@ -9,13 +9,20 @@
   <h1 class="text-center">Список компаний</h1>
 
   <h3>Фильтр:</h3>
-  <form type="get" class="my-3">
-    {{ company_filter_form|crispy }}
+
+<!--  <form type="get" class="my-3">-->
+<!--    {{ company_filter_form|crispy }}-->
+<!--    <input type="submit" class="btn btn-success btn-sm" value="Фильтровать">-->
+<!--  </form>-->
+
+  <form method="get" class="my-3">
+    {{ filter.form|crispy }}
     <input type="submit" class="btn btn-success btn-sm" value="Фильтровать">
   </form>
 
+
   <div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for company in company_list %}
+    {% for company in filter.qs %}
     <div class="col">
       <div class="card h-100">
           <a href="{% url 'company_detail' company.slug %}">
