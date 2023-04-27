@@ -7,7 +7,25 @@
 {% endblock title %}
 
 {% block content %}
-    <h3>Редактирование субъекта "{{ object }}":</h3>
+        <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'company_list' %}">Список компаний</a></li>
+          <li class="breadcrumb-item" aria-current="page"><a href="{% url 'company_detail' company.slug %}">{{ company }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Добавление финансовой информации</li>
+        </ol>
+    </nav>
+
+    <div class="card my-3">
+        <div class="card-body">
+          <h2 class="card-title">Редактирование субъекта "{{ company }}"</h2>
+          <p class="card-text">Данный субъект был создан <b>{{ object.created }}</b>.</p>
+          <p class="card-text">Для полного удаления нажмите
+            <a class="btn btn-sm btn-danger opacity-75" href="{% url 'company_delete' company.slug %}">
+                <i class="bi bi-trash"></i> Удалить
+            </a>
+          </p>
+      </div>
+    </div>
 
     <form method="post" enctype="multipart/form-data">
         {{ form|crispy }}

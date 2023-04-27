@@ -77,7 +77,14 @@ class CompanyUpdateView(LoginRequiredMixin, CompanyOwnerTestMixin, UpdateView):
         return reverse_lazy("company_detail", kwargs={"slug": self.object.slug})
 
 
-class EmployeeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class CompanyDeleteView(LoginRequiredMixin, CompanyOwnerTestMixin, DeleteView):
+    model = Company
+    success_url = reverse_lazy("company_list")
+    context_object_name = "company"
+    template_name = "enterprises/company_delete.html"
+
+
+
 class EmployeeCreateView(LoginRequiredMixin, CompanyOwnerTestMixin, CreateView):
     """Add company employee"""
 
