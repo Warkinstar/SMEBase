@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "accounts.apps.AccountsConfig",
     "enterprises.apps.EnterprisesConfig",
     "pages.apps.PagesConfig",
+    "products.apps.ProductsConfig",
     # 3rd party
     "phonenumber_field",
     "allauth",
