@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% load static %}
 
 {% block title %}Продукты{% endblock title %}
@@ -9,21 +10,24 @@
 
 <div class="row">
     <div class="col-md-2">
-        Овощи
+        <form method="get">
+            {{ products.form|crispy }}
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Фильтр</button>
+        </form>
     </div>
 
     <div class="col-md">
-        {% for product in products %}
+        {% for product in products.qs %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card">
               <img {% if product.image %} src="{{ product.image.url }}" {% else %} src="{% static 'images/no-image.jfif' %}" {% endif %} class="card-img-top" alt="{{ product.name }} image">
               <div class="card-body">
                   <h5 class="card-title">{{ product.name }}</h5>
                   <p class="card-text">{{ product.description }}</p>
-                  <span class="badge bg-light text-dark"><p class="card-text">Цена: {{ product.price }}</p></span>
-                  <span class="badge bg-light text-dark"><p class="card-text">{{ product.type.product_category }}</p></span>
-                  <span class="badge bg-light text-dark"><p class="card-text">{{ product.type }}</p></span>
-                  <span class="badge bg-light text-dark"><p class="card-text">{{ product.company }}</p></span>
+                  <a href="{% url 'product_list' %}?price__lt={{ product.price|floatformat }}" class="badge bg-light text-dark"><p class="card-text">Цена: {{ product.price|floatformat }}</p></a>
+                  <a href="{% url 'product_list' %}?type__product_category={{ product.type.product_category.pk }}" class="badge bg-light text-dark"><p class="card-text">{{ product.type.product_category }}</p></a>
+                  <a href="{% url 'product_list' %}?type={{ product.type.pk }}" class="badge bg-light text-dark"><p class="card-text">{{ product.type }}</p></a>
+                  <a href="{% url 'product_list' %}?company={{ product.company.pk }}" class="badge bg-light text-dark"><p class="card-text">{{ product.company }}</p></a>
               </div>
             </div>
         </div>

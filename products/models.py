@@ -36,6 +36,7 @@ class ProductType(BaseModel):
         ProductCategory,
         on_delete=models.CASCADE,
         related_name="types",
+        verbose_name="Категория продукта",
         help_text="Категория продукта",
     )
     name = models.CharField(
@@ -46,7 +47,10 @@ class ProductType(BaseModel):
 
 class Product(BaseModel):
     company = models.ForeignKey(
-        Company, on_delete=models.CASCADE, related_name="products"
+        Company,
+        on_delete=models.CASCADE,
+        related_name="products",
+        verbose_name="Компания",
     )
     type = models.ForeignKey(
         ProductType,
@@ -57,4 +61,6 @@ class Product(BaseModel):
     name = models.CharField("Название продукта", max_length=255)
     price = models.DecimalField("Цена", max_digits=10, decimal_places=2)
     description = models.TextField("Описание продукта", blank=True)
-    image = models.ImageField("Изображение продукта", upload_to="product_images", blank=True)
+    image = models.ImageField(
+        "Изображение продукта", upload_to="product_images", blank=True
+    )
