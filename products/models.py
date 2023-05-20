@@ -57,4 +57,4 @@ class Product(BaseModel):
     name = models.CharField("Название продукта", max_length=255)
     price = models.DecimalField("Цена", max_digits=10, decimal_places=2)
     description = models.TextField("Описание продукта", blank=True)
-    image = models.ImageField("Изображение продукта", upload_to="product_images")
+    image = models.ImageField("Изображение продукта", upload_to="product_images", blank=True)

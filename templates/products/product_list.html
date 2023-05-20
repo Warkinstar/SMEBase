@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Продукты{% endblock title %}
+
+
+{% block content %}
+
+
+<div class="row">
+    <div class="col-md-2">
+        Овощи
+    </div>
+
+    <div class="col-md">
+        {% for product in products %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <div class="card">
+              <img {% if product.image %} src="{{ product.image.url }}" {% else %} src="{% static 'images/no-image.jfif' %}" {% endif %} class="card-img-top" alt="{{ product.name }} image">
+              <div class="card-body">
+                  <h5 class="card-title">{{ product.name }}</h5>
+                  <p class="card-text">{{ product.description }}</p>
+                  <span class="badge bg-light text-dark"><p class="card-text">Цена: {{ product.price }}</p></span>
+                  <span class="badge bg-light text-dark"><p class="card-text">{{ product.type.product_category }}</p></span>
+                  <span class="badge bg-light text-dark"><p class="card-text">{{ product.type }}</p></span>
+                  <span class="badge bg-light text-dark"><p class="card-text">{{ product.company }}</p></span>
+              </div>
+            </div>
+        </div>
+        {% empty %}
+          <p>Ничего нет</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock content %}
