@@ -40,3 +40,22 @@ class ProductCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         """Проверяет что у пользователя есть созданная компания(и)"""
         if self.request.user.companies.exists():
             return True
+
+
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    context_object_name = "product"
+    template_name = "products/product_update.html"
+
+    def get_form_kwargs(self):
+        """Передает ключевые аргументы в форму для построения"""
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def test_func(self):
+        """Проверяет что пользователь хозяин компании"""
+        product = self.get_object()
+        if self.request.user == product.company.user:
+            return True

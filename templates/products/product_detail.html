@@ -12,7 +12,10 @@
 
     </div>
         <div class="col-md-8">
-              <h2 class="card-title">{{ product.name }}</h2>
+              <h2 class="card-title">
+                  {{ product.name }}
+                  {% if product.company.user == request.user %} <a href="{% url 'product_update' product.pk %}"><i class="bi bi-gear"></i></a> {% endif %}
+              </h2>
               <p class="h5">{{ product.description }}</p>
               <a href="{% url 'product_list' %}?price__lt={{ product.price|floatformat }}" class="badge bg-light text-dark">Цена: {{ product.price|floatformat }}</a>
               <a href="{% url 'product_list' %}?type__product_category={{ product.type.product_category.pk }}" class="badge bg-light text-dark">Категория: {{ product.type.product_category }}</a>
