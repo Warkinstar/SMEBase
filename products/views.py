@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView, CreateView
 from .models import Product, ProductType, ProductCategory
 from enterprises.models import Company
@@ -16,6 +17,12 @@ class ProductListView(ListView):
     def get_queryset(self):
         f = ProductFilter(self.request.GET, queryset=Product.objects.all())
         return f
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    context_object_name = "product"
+    template_name = "products/product_detail.html"
 
 
 class ProductCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):

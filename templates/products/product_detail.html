@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}{{ product.name }}{% endblock title %}
+
+{% block content %}
+
+<div class="row my-5">
+    <div class="col-md-4">
+        <img {% if product.image %} src="{{ product.image.url }}" {% else %} src="{% static 'images/no-image.jfif' %}" {% endif %} class="img-fluid img-thumbnail" alt="{{ product.name }} image">
+
+    </div>
+        <div class="col-md-8">
+              <h2 class="card-title">{{ product.name }}</h2>
+              <p class="h5">{{ product.description }}</p>
+              <a href="{% url 'product_list' %}?price__lt={{ product.price|floatformat }}" class="badge bg-light text-dark">Цена: {{ product.price|floatformat }}</a>
+              <a href="{% url 'product_list' %}?type__product_category={{ product.type.product_category.pk }}" class="badge bg-light text-dark">Категория: {{ product.type.product_category }}</a>
+              <a href="{% url 'product_list' %}?type={{ product.type.pk }}" class="badge bg-light text-dark">Тип: {{ product.type }}</a>
+              <a href="{% url 'product_list' %}?company={{ product.company.pk }}" class="badge bg-light text-dark">Компания: {{ product.company }}</a>
+              <p class="my-5">
+                  <a href="{% url 'product_list' %}?price__lt={{ product.price|floatformat }}&type={{ product.type.pk }}" class="btn btn-success mx-2">Показать дешевле</a>
+                  <a href="{% url 'product_list' %}?prise__gt={{ product.price|floatformat }}&type={{ product.type.pk }}" class="btn btn-danger">Показать дороже</a>
+              </p>
+        </div>
+</div>
+
+
+{% endblock content %}

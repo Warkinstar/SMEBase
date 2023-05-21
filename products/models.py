@@ -1,5 +1,6 @@
 from django.db import models
 from enterprises.models import Company
+from django.shortcuts import reverse
 
 
 class BaseModel(models.Model):
@@ -64,3 +65,6 @@ class Product(BaseModel):
     image = models.ImageField(
         "Изображение продукта", upload_to="product_images", blank=True
     )
+
+    def get_absolute_url(self):
+        return reverse("product_detail", kwargs={"pk": self.pk})
