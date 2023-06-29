@@ -13,8 +13,31 @@ Thus, the developed database model allows you to store and manage information ab
 The combination of the Product model and the Product Filter allows you to conveniently manage product data and filter them using various parameters. The Product model stores basic product information, and the Product Filter provides flexible filtering functionality, allowing users to search for products by name, price, type and category. This simplifies the search and comparison of products, as well as increases the usability of the system for customers.
 The overall functionality of the Product model and the Product Filter facilitates efficient product management and provides a user-friendly interface for users, allowing them to find and select products according to their preferences and requirements.
 
+# Installing
 
- Вы может установить все зависимости библиотек командной pip install -r requirements.txt.
+* Создаем виртуальное окружение
+```
+python -m venv .venv
+.venv/scripts/activate
+```
+
+* Устанавливаем зависимости проекта
+pip install -r requirements.txt
+
+* Проведите миграцию базы данных:
+```
+python manage.py migrate
+```
+
+* Создайте superuser:
+```
+python manage.py creatsuperuser
+```
+
+* Запуск проекта:
+```
+python manage.py runserver
+```
 
 Сформирована модель данных, которая может хранить информацию о малом и среднем бизнеса.
 Также были добавлены возможности для хранения информации о типе собственности бизнеса и типе бизнеса. Это позволит легче и быстрее классифицировать компании и проводить статистические исследования.
@@ -23,3 +46,6 @@ The overall functionality of the Product model and the Product Filter facilitate
 
 Сочетание модели Product и фильтра ProductFilter позволяет удобно управлять данными о продуктах и осуществлять их фильтрацию с помощью различных параметров. Модель Product хранит основную информацию о продукте, а фильтр ProductFilter обеспечивает гибкую функциональность фильтрации, позволяя пользователям искать продукты по имени, цене, типу и категории. Это упрощает поиск и сравнение товаров, а также повышает удобство использования системы для клиентов.
 Общая функциональность модели Product и фильтра ProductFilter содействует эффективному управлению товарами и обеспечивает удобный интерфейс для пользователей, позволяя им находить и выбирать продукты в соответствии с их предпочтениями и требованиями.
+
+## Лицензия
+Этот проект лицензирован в соответствии с лицензией MIT. Подробности можно найти в файле [LICENSE](LICENSE).
