@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "enterprises.apps.EnterprisesConfig",
     "pages.apps.PagesConfig",
     "products.apps.ProductsConfig",
+    "apis.apps.ApisConfig",
     # 3rd party
     "phonenumber_field",
     "allauth",
@@ -54,6 +55,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_filters",
     "django_cleanup",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
