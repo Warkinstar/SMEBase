@@ -27,7 +27,14 @@ class APITests(APITestCase):
         )
 
     def test_api_listview(self):
-        response = self.client.get(reverse("company_list_api"))
+        response = self.client.get(reverse("api_v1:company_list"))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Company.objects.count(), 1)
         self.assertContains(response, self.company)
+
+    def test_api_detailview(self):
+        response = self.client.get(reverse("api_v1:company_detail", kwargs={"slug": self.company.slug}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Company.objects.count(), 1)
+        self.assertContains(response, self.company)
+
