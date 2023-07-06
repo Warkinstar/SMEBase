@@ -56,12 +56,14 @@ INSTALLED_APPS = [
     "django_filters",
     "django_cleanup",
     "rest_framework",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -189,3 +191,10 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.AllowAny"
     ]
 }
+
+CORS_ALLOWED_ORIGINS = (
+    "http://localhost:3000",  # react
+    "http://localhost:8000",
+)
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]  # react
