@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from enterprises.models import Company, OwnershipType, BusinessType
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class CompanyAPITests(APITestCase):
@@ -11,6 +12,9 @@ class CompanyAPITests(APITestCase):
     def setUpTestData(cls):
         cls.owner = get_user_model().objects.create_user(
             username="testuser", email="testuser@email.com", password="testpass123"
+        )
+        cls.no_owner = get_user_model().objects.create_user(
+            username="testuser_2", email="testuser_2@email.com", password="testpass123"
         )
         cls.ownership_type = OwnershipType.objects.create(name="ИП")
         cls.business_type = BusinessType.objects.create(name="Рестораны")
@@ -27,10 +31,19 @@ class CompanyAPITests(APITestCase):
         )
 
     def test_api_listview(self):
-        response = self.client.get(reverse("api_v1:company_list"))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.client.login()
+        response_no_auth = self.client.get(reverse("api_v1:company_list"))
+        self.assertEqual(
+            response_no_auth.status_code, status.HTTP_403_FORBIDDEN
+        )  # 403 no auth
+
+        self.client.login(email="testuser@email.com", password="testpass123")
+        response_with_auth = self.client.get(reverse("api_v1:company_list"))
+        self.assertEqual(
+            response_with_auth.status_code, status.HTTP_200_OK
+        )  # 200 with auth
         self.assertEqual(Company.objects.count(), 1)
-        self.assertContains(response, self.company)
+        self.assertContains(response_with_auth, self.company)
 
     def test_api_detailview(self):
         self.client.login(email="testuser@email.com", password="testpass123")
@@ -67,9 +80,64 @@ class CompanyAPITests(APITestCase):
         response_detail = self.client.get(
             reverse("api_v1:company_detail", kwargs={"slug": company_data["slug"]})
         )
-        self.assertEqual(response_detail.status_code, status.HTTP_200_OK)  # Object is present
+        self.assertEqual(
+            response_detail.status_code, status.HTTP_200_OK
+        )  # Object is present
         self.assertContains(response_detail, "Best Test Company")
 
         # Test created object
         created_company = Company.objects.get(slug="best-test-company")
         self.assertEqual(created_company.user, self.owner)
+
+    def test_company_list_and_detail_api_permissions(self):
+        """All authenticated users can create objects, but only the authors can delete and modify existing objects"""
+        # no owner user
+        self.client.login(email="testuser_2@email.com", password="testpass123")
+        # patch request
+        response_patch = self.client.patch(
+            reverse(
+                "api_v1:company_detail",
+                kwargs={"slug": self.company.slug},
+            ),
+            data={"description": "Worst Test Company"},
+            format="json",
+        )
+        # delete request
+        response_delete = self.client.delete(
+            reverse("api_v1:company_detail", kwargs={"slug": self.company.slug})
+        )
+
+        self.assertEqual(
+            response_patch.status_code, status.HTTP_403_FORBIDDEN
+        )  # 403 for patch
+        self.assertEqual(
+            response_delete.status_code, status.HTTP_403_FORBIDDEN
+        )  # 403 for delete
+
+        # owner user
+        self.client.login(email="testuser@email.com", password="testpass123")
+
+        response_patch = self.client.patch(
+            reverse(
+                "api_v1:company_detail",
+                kwargs={"slug": self.company.slug},
+            ),
+            data={"description": "Worst Test Company"},
+            format="json",
+        )  # patch description field
+        self.assertEqual(
+            response_patch.status_code, status.HTTP_200_OK
+        )  # 200 for patch
+        self.assertEqual(
+            Company.objects.get(slug=self.company.slug).description,
+            "Worst Test Company",
+        )  # description patched
+
+        response_delete = self.client.delete(
+            reverse("api_v1:company_detail", kwargs={"slug": self.company.slug})
+        )  # delete company object
+        self.assertEqual(
+            response_delete.status_code, status.HTTP_204_NO_CONTENT
+        )  # 204 object deleted
+        with self.assertRaises(ObjectDoesNotExist):
+            Company.objects.get(slug=self.company.slug)  # exception obj doesn't exist
