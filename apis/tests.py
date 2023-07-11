@@ -1,10 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 from enterprises.models import Company, OwnershipType, BusinessType
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.authtoken.models import Token
 
 
 class CompanyAPITests(APITestCase):
@@ -141,3 +142,21 @@ class CompanyAPITests(APITestCase):
         )  # 204 object deleted
         with self.assertRaises(ObjectDoesNotExist):
             Company.objects.get(slug=self.company.slug)  # exception obj doesn't exist
+
+    def test_token_auth(self):
+        response_anon = self.client.get(reverse("api_v1:company_list"))
+        self.assertEqual(
+            response_anon.status_code, status.HTTP_403_FORBIDDEN
+        )  # anon 403
+
+        token = Token.objects.create(user=self.owner).key  # token for user
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token)  # login via token
+        response_user = self.client.get(reverse("api_v1:company_list"))
+        self.assertEqual(response_user.status_code, status.HTTP_200_OK)
+
+        self.client.logout()
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + token
+        )  # login via Bearer <token>
+        response_user = self.client.get(reverse("api_v1:company_list"))
+        self.assertEqual(response_user.status_code, status.HTTP_200_OK)

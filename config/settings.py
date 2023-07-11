@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "django_cleanup",
     "rest_framework",
     "corsheaders",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -191,8 +192,10 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",  # rest_framework.urls
+        # "rest_framework.authentication.BasicAuthentication",  # Login-Password
+        "rest_framework.authentication.TokenAuthentication",  # Authorization: Token <token>
+        "apis.authentication.bearer_authentication.BearerTokenAuthentication",  # Authorization: Bearer <token>  # postman
     ],
 }
 
