@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "rest_framework.authtoken",
     "dj_rest_auth",
+    "dj_rest_auth.registration",
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.request",
             ],
         },
     },
@@ -206,3 +208,9 @@ CORS_ALLOWED_ORIGINS = (
 )
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]  # react
+
+
+REST_AUTH = {
+    # 'REGISTER_SERIALIZER': 'dj_rest_auth.registration.serializers.RegisterSerializer',
+    "REGISTER_SERIALIZER": "apis.registration.serializers.CustomRegisterSerializer",  # CustomRegister
+}

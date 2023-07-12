@@ -160,3 +160,31 @@ class CompanyAPITests(APITestCase):
         )  # login via Bearer <token>
         response_user = self.client.get(reverse("api_v1:company_list"))
         self.assertEqual(response_user.status_code, status.HTTP_200_OK)
+
+    def test_rest_registration(self):
+        """Check CustomRegisterSerializer with new fields: first_name, last_name, phone_number, middle_name"""
+
+        user_data = {
+            "username": "testuser_3",
+            "first_name": "Jack",
+            "last_name": "Fry",
+            "middle_name": "Ben",
+            "email": "testuser_3@email.com",
+            "phone_number": "77771023215",
+            "password1": "testpass123",
+            "password2": "testpass123",
+        }
+        # api rest_register dj_rest_auth.registration
+        response_register = self.client.post(
+            reverse("rest_register"), data=user_data, format="json"
+        )
+        # Status - user created
+        self.assertEqual(response_register.status_code, status.HTTP_204_NO_CONTENT)
+
+        registered_user = get_user_model().objects.get(email="testuser_3@email.com")
+        # check some fields
+        self.assertEqual(registered_user.first_name, "Jack")
+        self.assertEqual(registered_user.middle_name, "Ben")
+        self.assertEqual(
+            registered_user.phone_number.as_international, "+7 777 102 3215"
+        )
