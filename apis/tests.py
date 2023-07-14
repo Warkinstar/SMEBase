@@ -188,3 +188,15 @@ class CompanyAPITests(APITestCase):
         self.assertEqual(
             registered_user.phone_number.as_international, "+7 777 102 3215"
         )
+
+    def test_user_model_view_set(self):
+        self.client.login(email="testuser@email.com", password="testpass123")  # login
+        response_user_list = self.client.get(reverse("api_v1:user-list"))  # user-list api
+        self.assertEqual(response_user_list.status_code, status.HTTP_200_OK)
+
+        response_user_detail = self.client.get(
+            reverse("api_v1:user-detail", kwargs={"pk": self.owner.pk})
+        )  # user detail
+
+        self.assertEqual(response_user_detail.status_code, status.HTTP_200_OK)
+        self.assertContains(response_user_detail, text="testuser@email.com")  # email exists
