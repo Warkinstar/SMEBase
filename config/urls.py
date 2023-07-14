@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from drf_spectacular.views import SpectacularAPIView
 
 
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
     path("", include("pages.urls")),
     path("enterprises/", include("enterprises.urls")),
     path("products/", include("products.urls")),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
 ]
 
 if settings.DEBUG:

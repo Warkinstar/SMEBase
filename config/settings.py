@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -200,6 +201,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",  # Authorization: Token <token>
         "apis.authentication.bearer_authentication.BearerTokenAuthentication",  # Authorization: Bearer <token>  # postman
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 CORS_ALLOWED_ORIGINS = (
@@ -208,6 +210,13 @@ CORS_ALLOWED_ORIGINS = (
 )
 
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]  # react
+
+# drf-spectacular
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Small and Middle Base API",
+    "DESCRIPTION": "Small and middle business data base",
+    "VERSION": "1.0.0",
+}
 
 
 REST_AUTH = {
